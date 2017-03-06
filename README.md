@@ -1,2 +1,4 @@
-# BigData_AnalyzePlaneCrashes
-Here I am using a language called R to analyze a dataset of plane accidents since 1908 from Kaggle which I will complete some pre-processing on and eventually, analyze the data to find some useful information and statistics regarding plane accidents.
+# Plane Crashes since 1908
+Through this project, I will demonstrate how we can run some basic statistics regarding Big Data and how to complete some pre-processing on a dataset.
+
+Link to original dataset: https://www.kaggle.com/saurograndi/airplane-crashes-since-1908
