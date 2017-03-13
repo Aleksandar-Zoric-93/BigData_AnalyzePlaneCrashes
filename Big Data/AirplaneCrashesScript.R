@@ -88,6 +88,15 @@ Airplane_Crashes_and_Fatalities_Since_1908$Location <- stri_enc_toutf8(Airplane_
 
 
 
+#Convert Type column from a character to factor so that we can categorise it
+Airplane_Crashes_and_Fatalities_Since_1908$Type <- as.factor(Airplane_Crashes_and_Fatalities_Since_1908$Type)
+
+#Create a new Column 'Manufacturer' and insert the first word from eahc value in the Type columnn
+Airplane_Crashes_and_Fatalities_Since_1908$Manufacturer <- gsub("([A-Za-z]+).*", "\\1", Airplane_Crashes_and_Fatalities_Since_1908$Type)
+
 
 #Exporting a dataset to possibly have some kind of version control.  For Developer use only
-write.csv(Airplane_Crashes_and_Fatalities_Since_1908, "dataset4.csv")
+write.csv(Airplane_Crashes_and_Fatalities_Since_1908, "dataset5.csv")
+
+
+
