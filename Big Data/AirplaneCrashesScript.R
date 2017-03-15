@@ -95,8 +95,26 @@ Airplane_Crashes_and_Fatalities_Since_1908$Type <- as.factor(Airplane_Crashes_an
 Airplane_Crashes_and_Fatalities_Since_1908$Manufacturer <- gsub("([A-Za-z]+).*", "\\1", Airplane_Crashes_and_Fatalities_Since_1908$Type)
 
 
+#Getting the manufacturers with highest plane accidents
+manufacturersWithHighestPlaneAccidents <- tail(names(sort(table(Airplane_Crashes_and_Fatalities_Since_1908$Manufacturer))),10)
+
+#Getting the manufacturer that crashed the most planes
+highestCountPlaneAccidentsByManufacturer <- names(which.max(table(Airplane_Crashes_and_Fatalities_Since_1908$Manufacturer)))
+
+
+
+#Create a table to hold the manufacturers and count the data, to be used in the function i.e. Globally
+manufacturerDataTableFormat <- table(Airplane_Crashes_and_Fatalities_Since_1908$Manufacturer)
+
+#User defined function that requires one argument (the name of the manufacturer), and this function
+#will then return the amount of planes that manufacturer crashed
+accidentOccurencesByManufacturerFunction <- function(manufacturer) 
+{paste("This manufacturer crashed",
+ manufacturerDataTableFormat[names(manufacturerDataTableFormat)==manufacturer],"planes",sep = " ")}
+
+
 #Exporting a dataset to possibly have some kind of version control.  For Developer use only
-write.csv(Airplane_Crashes_and_Fatalities_Since_1908, "dataset5.csv")
+write.csv(Airplane_Crashes_and_Fatalities_Since_1908, "dataset6.csv")
 
 
 
