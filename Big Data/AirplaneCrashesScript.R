@@ -113,6 +113,60 @@ accidentOccurencesByManufacturerFunction <- function(manufacturer)
  manufacturerDataTableFormat[names(manufacturerDataTableFormat)==manufacturer],"planes",sep = " ")}
 
 
+
+
+
+
+#Assign the fatalities column to a variable name
+fatalitiesVector <- Airplane_Crashes_and_Fatalities_Since_1908$Fatalities
+
+#Get the mean of the above vector and remove in NA fields if found
+fatalitiesMean <- mean(fatalitiesVector,na.rm = TRUE)
+
+#Format the above result so that it only return the value to two decimal places
+fatalitiesMean <- format(round(fatalitiesMean), nsmall = 2)
+
+
+#Assign the aboard column to a variable name
+aboardVector <- Airplane_Crashes_and_Fatalities_Since_1908$Aboard
+
+#Get the mean of the above vector and remove in NA fields if found
+aboardMean <- mean(aboardVector, na.rm = TRUE)
+
+#Format the above result so that it only return the value to two decimal places
+aboardMean <- format(round(aboardMean), nsmall = 2)
+
+
+#Convert both values as a numeric
+aboardAmount <- as.numeric(aboardMean)
+fatalitiesAmount <- as.numeric(fatalitiesMean)
+
+#Print the values
+print(paste("Average number of people onboard of a plane: ",aboardAmount))
+print(paste("Average number of fatalities:",fatalitiesAmount))
+print(paste("Difference between people aboard and fatalities:",aboardAmount-fatalitiesAmount))
+
+
+#Obtaining some summary statistics of the passengers aboard and fatalities that I may need later
+summaryStatisticsOfFatalitiesAndAboard <- 
+  summary(Airplane_Crashes_and_Fatalities_Since_1908[c("Aboard","Fatalities")])
+
+#Getting the standard deviation of the fatalities column, 
+#so that we can see how much on average does the value differ from the mean
+#Smaller the standard deviation, means that the values cluster closely to the mean and vice versa
+var(fatalitiesVector)
+fatalitiesSD <- sd(fatalitiesVector)
+
+
+differenceBetweenSDandMean.Fatalities <- print(paste("Difference between standard deviation and the mean of the Fatalities: ",
+            format(round(fatalitiesSD-fatalitiesAmount),nsmall = 2)))
+
+
+#Scatter plot so that we can see the relationship between the passengers aboard and the fatalities
+plot(x=fatalitiesVector,y=aboardVector,
+     main = "Aboard vs Fatalities",xlab="Fatalities (Passenger)",ylab="Aboard (Passenger)")
+
+
 #Exporting a dataset to possibly have some kind of version control.  For Developer use only
 write.csv(Airplane_Crashes_and_Fatalities_Since_1908, "dataset6.csv")
 
