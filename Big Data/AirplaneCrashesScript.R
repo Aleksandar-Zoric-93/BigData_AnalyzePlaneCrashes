@@ -1,8 +1,19 @@
-#import libraries and load dataset
+#import/install libraries and load dataset
+install.packages("formattable")
+install.packages("readr")
+install.packages("stringr")
+install.packages("stringi")
+
 library(readr)
 library(stringr)
 library(stringi)
+library(formattable)
 Airplane_Crashes_and_Fatalities_Since_1908 <- read_csv("C:/Users/Aleks/Desktop/Big Data/Airplane_Crashes_and_Fatalities_Since_1908.csv")
+
+
+#New Section______________________________________________________________________________________________________________
+
+
 
 #Adding values to missing data in the Aboard column.  The added data is the average overall.
 Airplane_Crashes_and_Fatalities_Since_1908$Aboard = ifelse(is.na(Airplane_Crashes_and_Fatalities_Since_1908$Aboard),
@@ -21,7 +32,7 @@ Airplane_Crashes_and_Fatalities_Since_1908$Ground)
 
 
 
-
+#New Section______________________________________________________________________________________________________________
 
 
 #Converting all values to a whole number from both columns
@@ -69,7 +80,7 @@ Airplane_Crashes_and_Fatalities_Since_1908$Location <- ifelse(is.na(Airplane_Cra
 
 
 
-
+#New Section______________________________________________________________________________________________________________
 
 
 
@@ -88,20 +99,21 @@ Airplane_Crashes_and_Fatalities_Since_1908$Location <- stri_enc_toutf8(Airplane_
 
 
 
+#New Section______________________________________________________________________________________________________________
+
+
+
 #Convert Type column from a character to factor so that we can categorise it
 Airplane_Crashes_and_Fatalities_Since_1908$Type <- as.factor(Airplane_Crashes_and_Fatalities_Since_1908$Type)
 
 #Create a new Column 'Manufacturer' and insert the first word from eahc value in the Type columnn
 Airplane_Crashes_and_Fatalities_Since_1908$Manufacturer <- gsub("([A-Za-z]+).*", "\\1", Airplane_Crashes_and_Fatalities_Since_1908$Type)
 
-
 #Getting the manufacturers with highest plane accidents
 manufacturersWithHighestPlaneAccidents <- tail(names(sort(table(Airplane_Crashes_and_Fatalities_Since_1908$Manufacturer))),10)
 
 #Getting the manufacturer that crashed the most planes
 highestCountPlaneAccidentsByManufacturer <- names(which.max(table(Airplane_Crashes_and_Fatalities_Since_1908$Manufacturer)))
-
-
 
 #Create a table to hold the manufacturers and count the data, to be used in the function i.e. Globally
 manufacturerDataTableFormat <- table(Airplane_Crashes_and_Fatalities_Since_1908$Manufacturer)
@@ -113,7 +125,7 @@ accidentOccurencesByManufacturerFunction <- function(manufacturer)
  manufacturerDataTableFormat[names(manufacturerDataTableFormat)==manufacturer],"planes",sep = " ")}
 
 
-
+#New Section______________________________________________________________________________________________________________
 
 
 
@@ -126,7 +138,6 @@ fatalitiesMean <- mean(fatalitiesVector,na.rm = TRUE)
 #Format the above result so that it only return the value to two decimal places
 fatalitiesMean <- format(round(fatalitiesMean), nsmall = 2)
 
-
 #Assign the aboard column to a variable name
 aboardVector <- Airplane_Crashes_and_Fatalities_Since_1908$Aboard
 
@@ -136,15 +147,18 @@ aboardMean <- mean(aboardVector, na.rm = TRUE)
 #Format the above result so that it only return the value to two decimal places
 aboardMean <- format(round(aboardMean), nsmall = 2)
 
-
 #Convert both values as a numeric
-aboardAmount <- as.numeric(aboardMean)
-fatalitiesAmount <- as.numeric(fatalitiesMean)
+aboardAmountAverage <- as.numeric(aboardMean)
+fatalitiesAmountAverage <- as.numeric(fatalitiesMean)
 
 #Print the values
 print(paste("Average number of people onboard of a plane: ",aboardAmount))
 print(paste("Average number of fatalities:",fatalitiesAmount))
 print(paste("Difference between people aboard and fatalities:",aboardAmount-fatalitiesAmount))
+
+
+#New Section______________________________________________________________________________________________________________
+
 
 
 #Obtaining some summary statistics of the passengers aboard and fatalities that I may need later
@@ -165,6 +179,79 @@ differenceBetweenSDandMean.Fatalities <- print(paste("Difference between standar
 #Scatter plot so that we can see the relationship between the passengers aboard and the fatalities
 plot(x=fatalitiesVector,y=aboardVector,
      main = "Aboard vs Fatalities",xlab="Fatalities (Passenger)",ylab="Aboard (Passenger)")
+
+
+
+
+#New Section______________________________________________________________________________________________________________
+
+
+
+#Create a new column to determine the survivor to fatalities ratio on each accident that occured.  If the
+#ratio is 1.00, everybody died while if it is 0.7, this means that 70% of the passengers died.
+Airplane_Crashes_and_Fatalities_Since_1908$SurvivorToFatalitiesRatio <- with(Airplane_Crashes_and_Fatalities_Since_1908,
+ifelse(Airplane_Crashes_and_Fatalities_Since_1908$Aboard >= Airplane_Crashes_and_Fatalities_Since_1908$Fatalities, 
+Airplane_Crashes_and_Fatalities_Since_1908$Fatalities/Airplane_Crashes_and_Fatalities_Since_1908$Aboard, NA))
+
+#To clarify, I created another column which also gives us a percentage of the amount of passengers that died.
+#I also formatted it to 2 decimal places.
+Airplane_Crashes_and_Fatalities_Since_1908$DeathRatePercentage <- 
+Airplane_Crashes_and_Fatalities_Since_1908$SurvivorToFatalitiesRatio * 100
+
+Airplane_Crashes_and_Fatalities_Since_1908$DeathRatePercentage <- 
+format(round( Airplane_Crashes_and_Fatalities_Since_1908$DeathRatePercentage),nsmall = 2)
+
+
+#Here I just want to combine my values from the DeathRatePercentage column into a vector/list so I can work with them
+DeathRatePercentageCharacters <- c(Airplane_Crashes_and_Fatalities_Since_1908$DeathRatePercentage)
+
+#This line counts all accidents where there was 100% fatalities i.e. everybody onboard died
+numberOfAccidentsWithAllFatalities <- paste("Number of accidents where all passengers died: ",
+                                      length(which(DeathRatePercentageCharacters=="100.00")))
+
+#Remove white space from all strings within this variable.  Was causing an issue in the function
+DeathRatePercentageCharacters <- gsub(" ", "", DeathRatePercentageCharacters, fixed = TRUE)
+
+
+
+
+
+#New Section______________________________________________________________________________________________________________
+
+#A user defined function which returns the number of accidents occured based on the input, 
+#which is the death percentage.  The input is a string, put quotes around the parameter when called. 
+countAccidentsWithChosenDeathRatePercentage <- function(DeathRatePercent) 
+paste("Number of accidents: ",length(which(DeathRatePercentageCharacters==DeathRatePercent)))
+
+#Finding the average percentage of all accidents where all the passengers died
+averageOfTotalFatalities <- 
+length(which(DeathRatePercentageCharacters=="100.00"))/nrow(Airplane_Crashes_and_Fatalities_Since_1908)
+
+#Formatting the above result to 2 decimal places and adding a message to display the result
+averageOfTotalFatalities <- 
+paste("The average percentage of total fatalities across all accidents recorded is: ",
+formattable(averageOfTotalFatalities,digits = 2, format="f"),"%", sep = " ")
+
+
+#New Section______________________________________________________________________________________________________________
+
+
+#Formatting certain columns to 2 decimal places as I have no need for any values after that
+Airplane_Crashes_and_Fatalities_Since_1908$SurvivorToFatalitiesRatio <- 
+  formattable(Airplane_Crashes_and_Fatalities_Since_1908$SurvivorToFatalitiesRatio,digits = 2, format="f")
+
+Airplane_Crashes_and_Fatalities_Since_1908$Aboard <- 
+  formattable(Airplane_Crashes_and_Fatalities_Since_1908$Aboard,digits = 2, format="f")
+
+Airplane_Crashes_and_Fatalities_Since_1908$Fatalities <- 
+  formattable(Airplane_Crashes_and_Fatalities_Since_1908$Fatalities,digits = 2, format="f")
+
+Airplane_Crashes_and_Fatalities_Since_1908$Ground <- 
+  formattable(Airplane_Crashes_and_Fatalities_Since_1908$Ground,digits = 2, format="f")
+
+
+#New Section______________________________________________________________________________________________________________
+
 
 
 #Exporting a dataset to possibly have some kind of version control.  For Developer use only
