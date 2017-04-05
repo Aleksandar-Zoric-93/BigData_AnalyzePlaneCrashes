@@ -34,49 +34,50 @@ Airplane_Crashes_and_Fatalities_Since_1908$Ground)
 
 #New Section______________________________________________________________________________________________________________
 
+#Execute only if the data set is the default.
 
-#Converting all values to a whole number from both columns
-as.integer(Airplane_Crashes_and_Fatalities_Since_1908$Aboard)
-as.integer(Airplane_Crashes_and_Fatalities_Since_1908$Fatalities)
-as.integer(Airplane_Crashes_and_Fatalities_Since_1908$Ground)
-
-#Replacing all values with NA in the summary column with a more meanigful message
-Airplane_Crashes_and_Fatalities_Since_1908$Summary <- as.character(Airplane_Crashes_and_Fatalities_Since_1908$Summary)
-Airplane_Crashes_and_Fatalities_Since_1908$Summary <- ifelse(is.na(Airplane_Crashes_and_Fatalities_Since_1908$Summary),
-'No information on how the accident occured', Airplane_Crashes_and_Fatalities_Since_1908$Summary)
-
-#Replacing all values with NA in the time column with a more meanigful message
-Airplane_Crashes_and_Fatalities_Since_1908$Time <- as.character(Airplane_Crashes_and_Fatalities_Since_1908$Time)
-Airplane_Crashes_and_Fatalities_Since_1908$Time <- ifelse(is.na(Airplane_Crashes_and_Fatalities_Since_1908$Time),
-'Unknown time', Airplane_Crashes_and_Fatalities_Since_1908$Time)
-
-#Replacing all values with NA in the Flight # column with a more meanigful message
-Airplane_Crashes_and_Fatalities_Since_1908$'Flight #' <- ifelse(is.na(Airplane_Crashes_and_Fatalities_Since_1908$'Flight #'),
-'Unknown Flight #', Airplane_Crashes_and_Fatalities_Since_1908$'Flight #')
-
-#Replacing all values with NA in the Route column with a more meanigful message
-Airplane_Crashes_and_Fatalities_Since_1908$Route <- ifelse(is.na(Airplane_Crashes_and_Fatalities_Since_1908$Route),
-'Unknown Route', Airplane_Crashes_and_Fatalities_Since_1908$Route)
-
-#Replacing all values with NA in the Type column with a more meanigful message
-Airplane_Crashes_and_Fatalities_Since_1908$Type <- ifelse(is.na(Airplane_Crashes_and_Fatalities_Since_1908$Type),
-'Unknown Type', Airplane_Crashes_and_Fatalities_Since_1908$Type)
-
-#Replacing all values with NA in the Registration column with a more meanigful message
-Airplane_Crashes_and_Fatalities_Since_1908$Registration <- ifelse(is.na(Airplane_Crashes_and_Fatalities_Since_1908$Registration),
-'Unknown Registration', Airplane_Crashes_and_Fatalities_Since_1908$Registration)
-
-#Replacing all values with NA in the Operator column with a more meanigful message
-Airplane_Crashes_and_Fatalities_Since_1908$Operator <- ifelse(is.na(Airplane_Crashes_and_Fatalities_Since_1908$Operator),
-'Unknown Operator', Airplane_Crashes_and_Fatalities_Since_1908$Operator)
-
-#Replacing all values with NA in the Date column with a more meanigful message
-Airplane_Crashes_and_Fatalities_Since_1908$Date <- ifelse(is.na(Airplane_Crashes_and_Fatalities_Since_1908$Date),
-'Unknown Date', Airplane_Crashes_and_Fatalities_Since_1908$Date)
-
-#Replacing all values with NA in the Location column with a more meanigful message
-Airplane_Crashes_and_Fatalities_Since_1908$Location <- ifelse(is.na(Airplane_Crashes_and_Fatalities_Since_1908$Location),
-'Unknown Location', Airplane_Crashes_and_Fatalities_Since_1908$Location)
+# #Converting all values to a whole number from both columns
+# as.integer(Airplane_Crashes_and_Fatalities_Since_1908$Aboard)
+# as.integer(Airplane_Crashes_and_Fatalities_Since_1908$Fatalities)
+# as.integer(Airplane_Crashes_and_Fatalities_Since_1908$Ground)
+# 
+# #Replacing all values with NA in the summary column with a more meanigful message
+# Airplane_Crashes_and_Fatalities_Since_1908$Summary <- as.character(Airplane_Crashes_and_Fatalities_Since_1908$Summary)
+# Airplane_Crashes_and_Fatalities_Since_1908$Summary <- ifelse(is.na(Airplane_Crashes_and_Fatalities_Since_1908$Summary),
+# 'No information on how the accident occured', Airplane_Crashes_and_Fatalities_Since_1908$Summary)
+# 
+# #Replacing all values with NA in the time column with a more meanigful message
+# Airplane_Crashes_and_Fatalities_Since_1908$Time <- as.character(Airplane_Crashes_and_Fatalities_Since_1908$Time)
+# Airplane_Crashes_and_Fatalities_Since_1908$Time <- ifelse(is.na(Airplane_Crashes_and_Fatalities_Since_1908$Time),
+# 'Unknown time', Airplane_Crashes_and_Fatalities_Since_1908$Time)
+# 
+# #Replacing all values with NA in the Flight # column with a more meanigful message
+# Airplane_Crashes_and_Fatalities_Since_1908$'Flight #' <- ifelse(is.na(Airplane_Crashes_and_Fatalities_Since_1908$'Flight #'),
+# 'Unknown Flight #', Airplane_Crashes_and_Fatalities_Since_1908$'Flight #')
+# 
+# #Replacing all values with NA in the Route column with a more meanigful message
+# Airplane_Crashes_and_Fatalities_Since_1908$Route <- ifelse(is.na(Airplane_Crashes_and_Fatalities_Since_1908$Route),
+# 'Unknown Route', Airplane_Crashes_and_Fatalities_Since_1908$Route)
+# 
+# #Replacing all values with NA in the Type column with a more meanigful message
+# Airplane_Crashes_and_Fatalities_Since_1908$Type <- ifelse(is.na(Airplane_Crashes_and_Fatalities_Since_1908$Type),
+# 'Unknown Type', Airplane_Crashes_and_Fatalities_Since_1908$Type)
+# 
+# #Replacing all values with NA in the Registration column with a more meanigful message
+# Airplane_Crashes_and_Fatalities_Since_1908$Registration <- ifelse(is.na(Airplane_Crashes_and_Fatalities_Since_1908$Registration),
+# 'Unknown Registration', Airplane_Crashes_and_Fatalities_Since_1908$Registration)
+# 
+# #Replacing all values with NA in the Operator column with a more meanigful message
+# Airplane_Crashes_and_Fatalities_Since_1908$Operator <- ifelse(is.na(Airplane_Crashes_and_Fatalities_Since_1908$Operator),
+# 'Unknown Operator', Airplane_Crashes_and_Fatalities_Since_1908$Operator)
+# 
+# #Replacing all values with NA in the Date column with a more meanigful message
+# Airplane_Crashes_and_Fatalities_Since_1908$Date <- ifelse(is.na(Airplane_Crashes_and_Fatalities_Since_1908$Date),
+# 'Unknown Date', Airplane_Crashes_and_Fatalities_Since_1908$Date)
+# 
+# #Replacing all values with NA in the Location column with a more meanigful message
+# Airplane_Crashes_and_Fatalities_Since_1908$Location <- ifelse(is.na(Airplane_Crashes_and_Fatalities_Since_1908$Location),
+# 'Unknown Location', Airplane_Crashes_and_Fatalities_Since_1908$Location)
 
 
 
@@ -152,9 +153,9 @@ aboardAmountAverage <- as.numeric(aboardMean)
 fatalitiesAmountAverage <- as.numeric(fatalitiesMean)
 
 #Print the values
-print(paste("Average number of people onboard of a plane: ",aboardAmount))
-print(paste("Average number of fatalities:",fatalitiesAmount))
-print(paste("Difference between people aboard and fatalities:",aboardAmount-fatalitiesAmount))
+print(paste("Average number of people onboard of a plane: ",aboardAmountAverage))
+print(paste("Average number of fatalities:",fatalitiesAmountAverage))
+print(paste("Difference between people aboard and fatalities:",aboardAmountAverage-fatalitiesAmountAverage))
 
 
 #New Section______________________________________________________________________________________________________________
@@ -173,12 +174,7 @@ fatalitiesSD <- sd(fatalitiesVector)
 
 
 differenceBetweenSDandMean.Fatalities <- print(paste("Difference between standard deviation and the mean of the Fatalities: ",
-            format(round(fatalitiesSD-fatalitiesAmount),nsmall = 2)))
-
-
-#Scatter plot so that we can see the relationship between the passengers aboard and the fatalities
-plot(x=fatalitiesVector,y=aboardVector,
-     main = "Aboard vs Fatalities",xlab="Fatalities (Passenger)",ylab="Aboard (Passenger)")
+            format(round(fatalitiesSD-fatalitiesAmountAverage),nsmall = 2)))
 
 
 
@@ -252,7 +248,33 @@ Airplane_Crashes_and_Fatalities_Since_1908$Ground <-
 
 #New Section______________________________________________________________________________________________________________
 
+#Create a dataset of all crashes involving Douglas manufacturer i.e. highest ranking crash manufacturer
+allCrashesInvolvingDouglas <- 
+Airplane_Crashes_and_Fatalities_Since_1908[Airplane_Crashes_and_Fatalities_Since_1908$Manufacturer %in% 'Douglas',]
 
+#Select rows only where the ground deaths are equal to 0.  Otherwise the data is not useful to us
+#Because we do not plot the ground deaths for each aircraft
+allCrashesInvolvingDouglas<-allCrashesInvolvingDouglas[(allCrashesInvolvingDouglas$Ground=="0"),]
+View(allCrashesInvolvingDouglas)
+
+#Assign the fatalities column to a variable name
+fatalitiesVectorForDouglas <- allCrashesInvolvingDouglas$Fatalities
+
+#Assign the aboard column to a variable name
+aboardVectorForDouglas <- allCrashesInvolvingDouglas$Aboard
+
+
+#A plot so that we can see the relationship between the passengers aboard and the fatalities for the Douglas
+#manufacturer.  This does not include ground fatalities, only fatalities of passengers on the plane as this
+#type of data proves to be most useful
+plotAboardvsFatalitiesDouglas <- ggplot(allCrashesInvolvingDouglas, aes(x=fatalitiesVectorForDouglas, y=aboardVectorForDouglas,
+fill=fatalitiesVectorForDouglas)) + geom_bar(stat="identity") + xlab("Fatalities") + ylab("Passengers Aboard")
+
+#Change title of scale
+plotAboardvsFatalitiesDouglas <- plotAboardvsFatalitiesDouglas + guides(fill=guide_legend(title="Fatalities Scale"))
+
+#Change overall title
+plotAboardvsFatalitiesDouglas <- plotAboardvsFatalitiesDouglas + ggtitle("Aboard vs Fatalities for the Douglas manufacturer")
 
 #Exporting a dataset to possibly have some kind of version control.  For Developer use only
 write.csv(Airplane_Crashes_and_Fatalities_Since_1908, "dataset6.csv")
