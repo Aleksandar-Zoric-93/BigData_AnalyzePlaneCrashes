@@ -3,11 +3,13 @@ install.packages("formattable")
 install.packages("readr")
 install.packages("stringr")
 install.packages("stringi")
+install.packages("ggplot2")
 
 library(readr)
 library(stringr)
 library(stringi)
 library(formattable)
+library(ggplot2)
 Airplane_Crashes_and_Fatalities_Since_1908 <- read_csv("C:/Users/Aleks/Desktop/Big Data/Airplane_Crashes_and_Fatalities_Since_1908.csv")
 
 
@@ -263,7 +265,6 @@ fatalitiesVectorForDouglas <- allCrashesInvolvingDouglas$Fatalities
 #Assign the aboard column to a variable name
 aboardVectorForDouglas <- allCrashesInvolvingDouglas$Aboard
 
-
 #A plot so that we can see the relationship between the passengers aboard and the fatalities for the Douglas
 #manufacturer.  This does not include ground fatalities, only fatalities of passengers on the plane as this
 #type of data proves to be most useful
@@ -275,6 +276,104 @@ plotAboardvsFatalitiesDouglas <- plotAboardvsFatalitiesDouglas + guides(fill=gui
 
 #Change overall title
 plotAboardvsFatalitiesDouglas <- plotAboardvsFatalitiesDouglas + ggtitle("Aboard vs Fatalities for the Douglas manufacturer")
+
+#New Section______________________________________________________________________________________________
+
+#Find top 10 planes that crashed the most frequently
+planesWhichCrashedTheMost <- tail(names(sort(table(allCrashesInvolvingDouglas$Type))), 10)
+
+#Create slices for the pie chart which consists of the number the 10 Douglas planes have crashed
+slices <- c(length(which(allCrashesInvolvingDouglas$Type=="Douglas DC-3A")),
+            length(which(allCrashesInvolvingDouglas$Type=="Douglas DC-3C")),
+            length(which(allCrashesInvolvingDouglas$Type=="Douglas DC-6")),
+            length(which(allCrashesInvolvingDouglas$Type=="Douglas C-47-DL")),
+            length(which(allCrashesInvolvingDouglas$Type=="Douglas DC-6B")),
+            length(which(allCrashesInvolvingDouglas$Type=="Douglas C-47B")),
+            length(which(allCrashesInvolvingDouglas$Type=="Douglas DC-4")),
+            length(which(allCrashesInvolvingDouglas$Type=="Douglas C-47")),
+            length(which(allCrashesInvolvingDouglas$Type=="Douglas C-47A")),
+            length(which(allCrashesInvolvingDouglas$Type=="Douglas DC-3")))
+
+#Create labels for the pie chart which consists of the name of each of the top 10 Douglas planes that crashed
+lbls <- c(planesWhichCrashedTheMost)
+
+#And finally, graph a pie chart with the above values and apply some extra features so that it is 
+#displayed in a neater manner
+pie(slices, labels = lbls,col=rainbow(length(lbls)), main="Top 10 Douglas Planes that Crashed")
+slicesAsChr <- as.character(slices)
+
+#Legend to display the number of crashes per plane type
+legend("bottomleft", inset=.02, title="Number of Crashes",
+c(slicesAsChr), fill=topo.colors(10), cex=0.8)
+
+#New Section______________________________________________________________________________________________
+
+#Find the top 10 locations of Douglas Crashes
+top10LocationsOfDouglasCrashes <- tail(names(sort(table(allCrashesInvolvingDouglas$Location))), 10)
+
+#Create slices for the pie chart which consists of the number of the top 10 locations Douglas
+#planes have crashed at
+slicesLocation <- c(length(which(allCrashesInvolvingDouglas$Location=="Mexico")),
+                                 length(which(allCrashesInvolvingDouglas$Location=="Alaska")),
+                                 length(which(allCrashesInvolvingDouglas$Location=="France")),
+                                 length(which(allCrashesInvolvingDouglas$Location=="California")),
+                                 length(which(allCrashesInvolvingDouglas$Location=="Philippines")),
+                                 length(which(allCrashesInvolvingDouglas$Location=="China")),
+                                 length(which(allCrashesInvolvingDouglas$Location=="Canada")),
+                                 length(which(allCrashesInvolvingDouglas$Location=="Brazil")),
+                                 length(which(allCrashesInvolvingDouglas$Location=="India")),
+                                 length(which(allCrashesInvolvingDouglas$Location=="India")),
+                                 length(which(allCrashesInvolvingDouglas$Location=="Colombia")))
+
+#Labels for the pie chart of the top 10 crash locations of Douglas planes
+lblsForLocation <- c(top10LocationsOfDouglasCrashes)
+
+#Create pie chart which is colour cordinated to display top 10 crash locations for Douglas
+pie(slicesLocation, labels = lblsForLocation,col=rainbow(length(lbls)), main="Top 10 Locations Douglas planes have Crashed")
+slicesAsChrLocation <- as.character(slicesLocation)
+
+#Legend to display the number of crashes in each location
+legend("bottomleft", inset=.02, title="No# of Crashes",
+       c(slicesAsChrLocation), fill=topo.colors(10), cex=0.8)
+
+#New Section______________________________________________________________________________________________
+
+#Find the top 10 crash locations overall
+top10CrashLocationOverall <- tail(names(sort(table(Airplane_Crashes_and_Fatalities_Since_1908$Location))), 10)
+
+#Create slices for the pie chart which consists of the number of the top 10 locations 
+#planes have crashed overall
+slicesLocationOverall <- c(length(which(allCrashesInvolvingDouglas$Location=="China")),
+                    length(which(allCrashesInvolvingDouglas$Location=="India")),
+                    length(which(allCrashesInvolvingDouglas$Location=="England")),
+                    length(which(allCrashesInvolvingDouglas$Location=="France")),
+                    length(which(allCrashesInvolvingDouglas$Location=="California")),
+                    length(which(allCrashesInvolvingDouglas$Location=="Canada")),
+                    length(which(allCrashesInvolvingDouglas$Location=="Canada")),
+                    length(which(allCrashesInvolvingDouglas$Location=="Colombia")),
+                    length(which(allCrashesInvolvingDouglas$Location=="Russia")),
+                    length(which(allCrashesInvolvingDouglas$Location=="Alaska")),
+                    length(which(allCrashesInvolvingDouglas$Location=="Brazil")))
+
+#Labels for the pie chart of the top 10 crash locations overall
+lblsForLocationOverall <- c(top10CrashLocationOverall)
+
+#Create pie chart which is colour cordinated to display top 10 crash locations overall
+pie(slicesLocationOverall, labels = lblsForLocationOverall,col=rainbow(length(lbls)), main="Top 10 Locations of Plane Crashes Overall")
+slicesAsChrLocationOverall <- as.character(slicesLocationOverall)
+
+#Legend to display the number of crashes in each location
+legend("bottomleft", inset=.02, title="No# of Crashes Overall",
+       c(slicesAsChrLocationOverall), fill=topo.colors(10), cex=0.8)
+
+#New Section______________________________________________________________________________________________
+
+#Plot the two pie charts side by side to compare
+par(mfrow = c(1,2))
+
+pie(slicesLocation, labels = lblsForLocation,col=rainbow(length(lbls)), main="Top 10 Locations Douglas planes have Crashed")
+pie(slicesLocationOverall, labels = lblsForLocationOverall,col=rainbow(length(lbls)), main="Top 10 Locations of Plane Crashes Overall")
+
 
 #Exporting a dataset to possibly have some kind of version control.  For Developer use only
 write.csv(Airplane_Crashes_and_Fatalities_Since_1908, "dataset6.csv")
