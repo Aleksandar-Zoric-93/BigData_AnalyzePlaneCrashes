@@ -4,12 +4,20 @@ install.packages("readr")
 install.packages("stringr")
 install.packages("stringi")
 install.packages("ggplot2")
+install.packages("caret")
+install.packages("tm")
+install.packages("SnowballC")
+install.packages("wordcloud")
 
 library(readr)
 library(stringr)
 library(stringi)
 library(formattable)
 library(ggplot2)
+library(caret)
+library(tm)
+library(SnowballC)
+library(wordcloud)
 Airplane_Crashes_and_Fatalities_Since_1908 <- read_csv("C:/Users/Aleks/Desktop/Big Data/Airplane_Crashes_and_Fatalities_Since_1908.csv")
 
 
@@ -297,14 +305,16 @@ slices <- c(length(which(allCrashesInvolvingDouglas$Type=="Douglas DC-3A")),
 #Create labels for the pie chart which consists of the name of each of the top 10 Douglas planes that crashed
 lbls <- c(planesWhichCrashedTheMost)
 
+cols = c("black","blue", "brown", "red","darkcyan","cyan","chocolate","coral", "chartreuse", "cadetblue")
+
 #And finally, graph a pie chart with the above values and apply some extra features so that it is 
 #displayed in a neater manner
-pie(slices, labels = lbls,col=rainbow(length(lbls)), main="Top 10 Douglas Planes that Crashed")
+pie(slices, labels = lbls,col=cols, main="Top 10 Douglas Planes that Crashed",radius = 0.8)
 slicesAsChr <- as.character(slices)
 
 #Legend to display the number of crashes per plane type
-legend("bottomleft", inset=.02, title="Number of Crashes",
-c(slicesAsChr), fill=topo.colors(10), cex=0.8)
+legend("bottomleft", sort(unique(lbls)),inset=.02, title="No# of Crashes", 
+fill=cols,c(slicesAsChr),cex=0.8, pch = 19)
 
 #New Section______________________________________________________________________________________________
 
@@ -329,12 +339,12 @@ slicesLocation <- c(length(which(allCrashesInvolvingDouglas$Location=="Mexico"))
 lblsForLocation <- c(top10LocationsOfDouglasCrashes)
 
 #Create pie chart which is colour cordinated to display top 10 crash locations for Douglas
-pie(slicesLocation, labels = lblsForLocation,col=rainbow(length(lbls)), main="Top 10 Locations Douglas planes have Crashed")
+pie(slicesLocation, labels = lblsForLocation,col=cols, main="Top 10 Locations Douglas planes have Crashed",radius = 0.8)
 slicesAsChrLocation <- as.character(slicesLocation)
 
 #Legend to display the number of crashes in each location
-legend("bottomleft", inset=.02, title="No# of Crashes",
-       c(slicesAsChrLocation), fill=topo.colors(10), cex=0.8)
+legend("bottomleft", sort(unique(lbls)),inset=.02, title="No# of Crashes", 
+       fill=cols,c(slicesAsChrLocation),cex=0.8, pch = 19)
 
 #New Section______________________________________________________________________________________________
 
@@ -359,24 +369,94 @@ slicesLocationOverall <- c(length(which(allCrashesInvolvingDouglas$Location=="Ch
 lblsForLocationOverall <- c(top10CrashLocationOverall)
 
 #Create pie chart which is colour cordinated to display top 10 crash locations overall
-pie(slicesLocationOverall, labels = lblsForLocationOverall,col=rainbow(length(lbls)), main="Top 10 Locations of Plane Crashes Overall")
+pie(slicesLocationOverall, labels = lblsForLocationOverall,col=cols, main="Top 10 Locations of Plane Crashes Overall",radius = 0.8)
 slicesAsChrLocationOverall <- as.character(slicesLocationOverall)
 
 #Legend to display the number of crashes in each location
-legend("bottomleft", inset=.02, title="No# of Crashes Overall",
-       c(slicesAsChrLocationOverall), fill=topo.colors(10), cex=0.8)
+legend("bottomleft", sort(unique(lbls)),inset=.02, title="No# of Crashes Overall", 
+       fill=cols,c(slicesAsChrLocationOverall),cex=0.8, pch = 19)
+
 
 #New Section______________________________________________________________________________________________
 
 #Plot the two pie charts side by side to compare
 par(mfrow = c(1,2))
 
-pie(slicesLocation, labels = lblsForLocation,col=rainbow(length(lbls)), main="Top 10 Locations Douglas planes have Crashed")
-pie(slicesLocationOverall, labels = lblsForLocationOverall,col=rainbow(length(lbls)), main="Top 10 Locations of Plane Crashes Overall")
+pie(slicesLocation, labels = lblsForLocation,col=cols, main="Top 10 Locations Douglas planes have Crashed",radius = 0.8)
+pie(slicesLocationOverall, labels = lblsForLocationOverall,col=cols, main="Top 10 Locations of Plane Crashes Overall",radius = 0.8)
 
+#New Section______________________________________________________________________________________________
+
+#A function that return the dates that the specfied amount of fatalities occured
+viewonWhichDatesFatalitiesOccured <- function(fatalitiesAmount)
+{allCrashesInvolvingDouglas[allCrashesInvolvingDouglas$Fatalities == fatalitiesAmount, "Date"]}
+
+#Get the top 10 crashes where the most fatalities occured
+tail(names(table(allCrashesInvolvingDouglas$Fatalities)), 10)
+
+#Create a corpus of the summary column and execute some functions to do some text clean up
+#i.e. putting all words to lower case, converting it to a plain text document etc.
+corpus = VCorpus(VectorSource(Airplane_Crashes_and_Fatalities_Since_1908$Summary))
+corpus = tm_map(corpus, tolower)
+corpus = tm_map(corpus, PlainTextDocument)
+corpus = tm_map(corpus, removePunctuation)
+corpus = tm_map(corpus, removeWords, stopwords("english"))
+docTermMatrix = DocumentTermMatrix(corpus)
+docTermMatrix = removeSparseTerms(docTermMatrix, 0.95)
+
+#Gather the top 50 most frequently used terms and store it in a variable to use later
+frequentTerms = findFreqTerms(docTermMatrix,50)
+
+#Print the terms via a for loop
+print('50 most frequently used terms:')
+for( i in frequentTerms)
+ cat(i, " ")
+
+#Must call this function twice since I used the par function earlier to combine plots
+#Calling this function just puts us back to the default plot creation
+dev.off()
+dev.off()
+
+#Graph a word cloud using the terms I found above
+wordcloud(corpus, max.words = 50, random.order = FALSE)
+
+#New Section______________________________________________________________________________________________
+
+#I am doing the same as above here but for the Douglas manufacturer.  I will then compare the 50 most frequent terms
+#from both the Douglas crashes and crashes overall, so that we can see the comparison.
+#Create a corpus of the summary column and execute some functions to do some text clean up
+#i.e. putting all words to lower case, converting it to a plain text document etc.
+corpusDouglas = VCorpus(VectorSource(allCrashesInvolvingDouglas$Summary))
+corpusDouglas = tm_map(corpusDouglas, tolower)
+corpusDouglas = tm_map(corpusDouglas, PlainTextDocument)
+corpusDouglas = tm_map(corpusDouglas, removePunctuation)
+corpusDouglas = tm_map(corpusDouglas, removeWords, stopwords("english"))
+docTermMatrixDouglas = DocumentTermMatrix(corpusDouglas)
+docTermMatrixDouglas = removeSparseTerms(docTermMatrixDouglas, 0.95)
+
+#Gather the top 50 most frequently used terms and store it in a variable to use later
+frequentTermsDouglas = findFreqTerms(docTermMatrixDouglas,50)
+
+#Print the terms via a for loop
+print('50 most frequently used terms in Douglas crashes:')
+for( i in frequentTermsDouglas)
+  cat(i, " ")
+
+#Graph a word cloud using the terms I found above
+wordcloud(corpusDouglas, max.words = 50, random.order = FALSE)
+
+#Add the two word clouds side by side for comparison
+par(mfrow = c(1,2))
+wordcloud(corpus, max.words = 50, random.order = FALSE)
+wordcloud(corpusDouglas, max.words = 50, random.order = FALSE)
+
+dev.off()
+
+
+#New Section______________________________________________________________________________________________
 
 #Exporting a dataset to possibly have some kind of version control.  For Developer use only
-write.csv(Airplane_Crashes_and_Fatalities_Since_1908, "dataset6.csv")
+write.csv(Airplane_Crashes_and_Fatalities_Since_1908, "dataset7.csv")
 
 
 
