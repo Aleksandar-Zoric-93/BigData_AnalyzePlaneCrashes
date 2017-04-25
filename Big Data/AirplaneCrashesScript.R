@@ -8,6 +8,7 @@ install.packages("caret")
 install.packages("tm")
 install.packages("SnowballC")
 install.packages("wordcloud")
+install.packages("ggmap")
 
 library(readr)
 library(stringr)
@@ -18,6 +19,7 @@ library(caret)
 library(tm)
 library(SnowballC)
 library(wordcloud)
+library(ggmap)
 Airplane_Crashes_and_Fatalities_Since_1908 <- read_csv("C:/Users/Aleks/Desktop/Big Data/Airplane_Crashes_and_Fatalities_Since_1908.csv")
 
 
@@ -454,6 +456,24 @@ dev.off()
 
 
 #New Section______________________________________________________________________________________________
+
+#This section will determine the top 10 locations Douglas DC-3 planes has crashed at and map the 
+#points on a map.  By doing so, we may be able to see if there is any pattern in terms of
+#where it crashed in the world.
+allDC3Crashes <- allCrashesInvolvingDouglas[allCrashesInvolvingDouglas$Type == "Douglas DC-3",]
+locations <- tail(names(sort(table(allDC3Crashes$Location))), 10)
+CoordsOfTop10DC3Crashes <- geocode(c(tail(names(sort(table(allDC3Crashes$Location))), 10)))
+CoordsOfTop10DC3Crashes <- cbind(locations, CoordsOfTop10DC3Crashes)
+
+
+CoordsLon <- CoordsOfTop10DC3Crashes$lon
+CoordsLat <- CoordsOfTop10DC3Crashes$lat
+
+mapWorld <- borders("world", colour="gray50", fill="gray50")
+top10DC3CrashLocation <- ggplot() + mapWorld + ggtitle("Top 10 locations Douglas DC-3 Plane crashed")
+top10DC3CrashLocation <- top10DC3CrashLocation + geom_point(aes(x=CoordsLon, y=CoordsLat) ,color="red", size=3) + 
+  geom_text(data=CoordsOfTop10DC3Crashes, inherit.aes=F, aes(x=CoordsOfTop10DC3Crashes$lon, y=CoordsOfTop10DC3Crashes$lat, 
+  label=CoordsOfTop10DC3Crashes$locations), vjust=1.5, colour="blue", alpha=.5)
 
 #Exporting a dataset to possibly have some kind of version control.  For Developer use only
 write.csv(Airplane_Crashes_and_Fatalities_Since_1908, "dataset7.csv")
